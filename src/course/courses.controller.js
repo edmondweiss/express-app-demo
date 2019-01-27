@@ -2,6 +2,7 @@ const Joi = require('joi');
 const HttpStatus = require('http-status-codes');
 const { CoursesDao } = require('./course.dao');
 const coursesDao = new CoursesDao();
+const express = require('express');
 const router = express.Router();
 
 function validateCourse(course) {
