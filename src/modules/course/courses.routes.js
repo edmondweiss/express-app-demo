@@ -1,9 +1,10 @@
 const Joi = require('joi');
 const HttpStatus = require('http-status-codes');
-const { CoursesDao } = require('./course.dao');
-const coursesDao = new CoursesDao();
+const { CourseDao } = require('./course.dao');
 const express = require('express');
 const router = express.Router();
+
+const courseDao = new CourseDao();
 
 function validateCourse(course) {
   return Joi.validate(course, {
@@ -21,30 +22,30 @@ function validateId(course) {
   });
 }
 
-router.get('/api/courses', (req, res) => {
-  res.send(coursesDao.getAllCourses());
+router.get('/', (req, res) => {
+  res.send(courseDao.getAllCourses());
   res.end();
 });
 
-router.get('/api/courses/:id', (req, res) => {
+router.get('/:id', (req, res) => {
   const { error } = validateId(req.body);
   if (error) {
     return res.status(HttpStatus.BAD_REQUEST)
       .send(error.details[0].message);
   }
-  const course = coursesDao.getCourseById(req.body.id).pop();
+  const course = courseDao.getCourseById(req.body.id).pop();
   return (course) ? res.send(course) : res.status(HttpStatus.NOT_FOUND)
     .send(error.details[0].message);
 });
 
-router.post('/api/courses', (req, res) => {
+router.post('/', (req, res) => {
   const { error } = validateCourse(req.body);
   if (error) {
     return res.status(HttpStatus.BAD_REQUEST)
       .send(error.details[0].message);
   }
   try {
-    const course = coursesDao
+    const course = courseDao
       .insertCourse(req.body)
       .pop();
     res.send(course);
@@ -54,14 +55,14 @@ router.post('/api/courses', (req, res) => {
   }
 });
 
-router.put('/api/courses/:id', (req, res) => {
+router.put('/:id', (req, res) => {
   const { error } = validateCourse(req.body);
   if (error) {
     return res.status(HttpStatus.BAD_REQUEST)
       .send(error.details[0].message);
   }
   try {
-    const updatedCourse = coursesDao.updatedCourse(req.body).pop();
+    const updatedCourse = courseDao.updatedCourse(req.body).pop();
     res.send(updatedCourse);
   } catch (err) {
     res.status(HttpStatus.NOT_FOUND)
@@ -69,14 +70,14 @@ router.put('/api/courses/:id', (req, res) => {
   }
 });
 
-router.delete('/api/courses/:id', (req, res) => {
+router.delete('/:id', (req, res) => {
   const { error } = validateId(req.body);
   if (error) {
     return res.status(HttpStatus.NOT_FOUND)
       .send(error.details[0].message);
   }
   try {
-    const deletedCourse = coursesDao.deleteCourse(req.body).pop();
+    const deletedCourse = courseDao.deleteCourse(req.body).pop();
     res.send(deletedCourse);
   } catch (err) {
     res.status(HttpStatus.NOT_FOUND)

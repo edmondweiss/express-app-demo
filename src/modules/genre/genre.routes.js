@@ -1,6 +1,10 @@
-const Joi = require('joi');
 const express = require('express');
 const router = express.Router();
+const { GenreDao } = require('./genre.dao');
+const HttpStatus = require('http-status-codes');
+const Joi = require('joi');
+
+const genreDao = new GenreDao();
 
 function validateGenre(genre) {
   return Joi.validate(genre, {
@@ -8,12 +12,10 @@ function validateGenre(genre) {
   })
 }
 
-function setGenreEndpoints(app) {
-  router.get('/', (req, res) => {
-    res.send(genreDao.getAllGenres());
-    res.end();
-  });
-}
+router.get('/', (req, res) => {
+  res.send(genreDao.getAllGenres());
+  res.end();
+})
 
 router.get('/:id', (req, res) => {
   const genreId = parseInt(req.params.id);
@@ -60,6 +62,5 @@ router.delete('/:id', (req, res) => {
     res.send(err.message);
   }
 });
-}
 
 module.exports = router;

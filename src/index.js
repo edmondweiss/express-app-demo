@@ -1,37 +1,27 @@
 const config = require('config');
 const helmet = require('helmet');
 const morgan = require('morgan');
-const Joi = require('joi');
 const express = require('express');
-const coursesController = require('./course/course.controller');
-const genresController = require('./genre/genre.controller');
-const logger = require('./middleware/logger');
-const genres = require('./routes/genre.routes');
-
+const homeRoutes = require('./modules/home/home.routes')
+const courseRoutes = require('./modules/course/courses.routes');
+const genreRoutes = require('./modules/genre/genre.routes');
 const app = express();
+
+app.set('view engine', 'pug');
+app.set('views', './src/views');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('assets'));
 app.use(helmet());
-app.use('api/genres', genres)
+app.use('/', homeRoutes);
+app.use('/api/courses', courseRoutes);
+app.use('/api/genres', genreRoutes);
+
 if (app.get('env') === 'development') {
   app.use(morgan('tiny'));
 }
 
-console.log(`App name ${config.get('name')}`);
-log
-
 const PORT = process.env.PORT || 3000;
-
-app.get('/', (req, res) => {
-  res.send('Hello World');
-  res.end();
-});
-
-coursesController.setCourseEndpoints(app);
-genresController.setGenreEndpoints(app);
-
-
 const server = app.listen(PORT);
 
 module.exports.app = app;

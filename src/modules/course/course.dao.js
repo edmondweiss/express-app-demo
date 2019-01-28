@@ -1,6 +1,6 @@
-const courses = require('../../database/courses.json');
+const courses = require('../../../database/courses.json');
 
-class CoursesDao {
+class CourseDao {
   constructor() {
     this.courses = courses || [];
   }
@@ -45,5 +45,5 @@ class CoursesDao {
 }
 
 module.exports = {
-  CoursesDao: CoursesDao
+  CourseDao: CourseDao
 }

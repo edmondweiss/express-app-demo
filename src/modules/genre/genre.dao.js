@@ -1,6 +1,6 @@
-const genres = require('../../database/genres.json');
+const genres = require('../../../database/genres.json');
 
-module.exports = class GenreDao {
+class GenreDao {
   constructor() {
     this.genres = genres || [];
   }
@@ -47,4 +47,8 @@ module.exports = class GenreDao {
     }
     return existingGenreIndex;
   }
+}
+
+module.exports = {
+  GenreDao: GenreDao
 }
